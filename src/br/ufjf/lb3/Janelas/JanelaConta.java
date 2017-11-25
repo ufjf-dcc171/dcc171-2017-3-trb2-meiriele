@@ -47,6 +47,11 @@ class JanelaConta extends JFrame{
                  barMukifo.get(cbMesa.getSelectedIndex()).reajustaHora(null);
                  btnAdicionar.setEnabled(true);
                  btnRemover.setEnabled(true);
+                 
+           
+                 barMukifo.get(cbMesa.getSelectedIndex()).getPedido().clear();
+            
+            
             }
         });
     }
