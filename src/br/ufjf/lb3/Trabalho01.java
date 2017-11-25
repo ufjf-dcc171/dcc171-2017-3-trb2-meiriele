@@ -12,7 +12,7 @@ public class Trabalho01 {
    
     public static void main(String[] args) {
         JanelaMain janela = new JanelaMain();
-        janela.setSize(450, 400);
+        janela.setSize(450, 420);
         janela.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         janela.setLocationRelativeTo(null);
         janela.setVisible(true);
