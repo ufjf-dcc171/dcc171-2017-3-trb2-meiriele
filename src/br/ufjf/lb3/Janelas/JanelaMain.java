@@ -10,8 +10,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Formatter;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -423,17 +427,16 @@ public class JanelaMain extends JFrame {
         
     }
 
-   /* private void gravarDadosTxt(ArrayList<Itens> pedidos ) {
-       String[] mesasPraCombo;
-       
-        File file = new File("mesa 0.txt");
-        file.delete();
-        
-        FileWriter arquivos = new FileWriter("mesa 0.txt");
-        PrintWriter gravarArquivos = new PrintWriter(arquivos);
-      
-       
-      
+    private void gravarDadosTxt(ArrayList<Itens> pedidos ) throws FileNotFoundException  {
+       PrintWriter arq = new PrintWriter("Itens.txt");
+       PrintWriter gravarArq = new PrintWriter(arq);
+        for (int i = 0; i < barMukifo.size(); i++) {
+            gravarArq.println();
+           barMukifo.get(i).getPedido();
+           atualizaModelo();
+           atualizarStatus();
+        }
+       arq.close();
     }
-    */
+    
 }
