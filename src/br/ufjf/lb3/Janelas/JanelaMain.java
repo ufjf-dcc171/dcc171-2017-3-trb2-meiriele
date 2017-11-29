@@ -8,8 +8,13 @@ import java.awt.GridLayout;
 import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -63,15 +68,18 @@ public class JanelaMain extends JFrame {
 
     public JanelaMain() throws HeadlessException {
         super("Bar Mukifo");
+
         // setMinimumSize(new Dimension(400, 350));
         //perguntar o Igor 
         lstDetalhamento.setVisibleRowCount(10);
         DefaultListModel modelo = (DefaultListModel) lstDetalhamento.getModel();
         DefaultListModel Modelo = (DefaultListModel) lstDetalhamento.getModel();
-        criaMesas();
+        //criaMesas();
+
         //ação pra listar itens
         addItens();
-
+        leDadosTxt();
+        
         setLayout(new FlowLayout());
 
         JPanel pnlMesas = new JPanel(new BorderLayout(1, 1));
@@ -144,6 +152,36 @@ public class JanelaMain extends JFrame {
     }
 //pronto
 
+    private Itens novoItem(int j, String quantidade) {
+        Itens itenPedido; //meu cadastro de estoque, não cadastra pela tela como a MESA
+        switch (j) {
+            case 0:
+                itenPedido = new Itens(cbEstoque.getItemAt(j), 2.5);
+                itenPedido.setQuantidade(Integer.parseInt(quantidade));
+                return itenPedido;
+            case 1:
+                itenPedido = new Itens(cbEstoque.getItemAt(j), 6.5);
+                itenPedido.setQuantidade(Integer.parseInt(quantidade));
+                return itenPedido;
+            case 2:
+                itenPedido = new Itens(cbEstoque.getItemAt(j), 3.5);
+                itenPedido.setQuantidade(Integer.parseInt(quantidade));
+                return itenPedido;
+            case 3:
+                itenPedido = new Itens(cbEstoque.getItemAt(j), 15.5);
+                itenPedido.setQuantidade(Integer.parseInt(quantidade));
+                return itenPedido;
+            case 4:
+                itenPedido = new Itens(cbEstoque.getItemAt(j), 12.5);
+                itenPedido.setQuantidade(Integer.parseInt(quantidade));
+                return itenPedido;
+            default:
+                itenPedido = new Itens(cbEstoque.getItemAt(j), 4.5);
+                itenPedido.setQuantidade(Integer.parseInt(quantidade));
+                return itenPedido;
+        }
+    }
+
     private void addItemPedido() {
         try {
             btnAdicionar.addActionListener(new ActionListener() {
@@ -152,50 +190,20 @@ public class JanelaMain extends JFrame {
                     int j = cbEstoque.getSelectedIndex();
                     Itens itenPedido;
                     if (barMukifo.get(i).getStatus() == null) {
-                        itenPedido = novoItem(j);
+                        itenPedido = novoItem(j, txtQtd.getText());
                         barMukifo.get(i).setStatus(true);
                         barMukifo.get(i).setHoraAbertura();
                         barMukifo.get(i).getPedido().add(itenPedido);
                         atualizaModelo();//chama a funcao na JanelaMain, ATUALIZAR A LISTA DE ITENS
                         atualizarStatus();
                     } else if (barMukifo.get(i).getStatus() == true) {
-                        itenPedido = novoItem(j);
+                        itenPedido = novoItem(j, txtQtd.getText());
                         barMukifo.get(i).getPedido().add(itenPedido);
                         atualizaModelo();
                         atualizarStatus();
                     }
                     txtQtd.setText("");
 
-                }
-
-                private Itens novoItem(int j) {
-                    Itens itenPedido; //meu cadastro de estoque, não cadastra pela tela como a MESA
-                    switch (j) {
-                        case 0:
-                            itenPedido = new Itens(cbEstoque.getItemAt(j), 2.5);
-                            itenPedido.setQuantidade(Integer.parseInt(txtQtd.getText()));
-                            return itenPedido;
-                        case 1:
-                            itenPedido = new Itens(cbEstoque.getItemAt(j), 6.5);
-                            itenPedido.setQuantidade(Integer.parseInt(txtQtd.getText()));
-                            return itenPedido;
-                        case 2:
-                            itenPedido = new Itens(cbEstoque.getItemAt(j), 3.5);
-                            itenPedido.setQuantidade(Integer.parseInt(txtQtd.getText()));
-                            return itenPedido;
-                        case 3:
-                            itenPedido = new Itens(cbEstoque.getItemAt(j), 15.5);
-                            itenPedido.setQuantidade(Integer.parseInt(txtQtd.getText()));
-                            return itenPedido;
-                        case 4:
-                            itenPedido = new Itens(cbEstoque.getItemAt(j), 12.5);
-                            itenPedido.setQuantidade(Integer.parseInt(txtQtd.getText()));
-                            return itenPedido;
-                        default:
-                            itenPedido = new Itens(cbEstoque.getItemAt(j), 4.5);
-                            itenPedido.setQuantidade(Integer.parseInt(txtQtd.getText()));
-                            return itenPedido;
-                    }
                 }
 
             });
@@ -273,6 +281,7 @@ public class JanelaMain extends JFrame {
             cbMesa.addActionListener(new ActionListener() {
                 public void actionPerformed(ActionEvent e) {
                     atualizarStatus();
+
                 }
             });
         } catch (Exception e) {
@@ -363,4 +372,68 @@ public class JanelaMain extends JFrame {
         cbEstoque = new JComboBox<>(itensPraCombo);
     }
 
+    private void leDadosTxt() {
+        String[] mesasPraCombo;
+        try {
+            int index;
+            Integer quantidade;
+            String hora;
+            File mesasIn = new File("mesas");
+            Scanner inputQuantMesas = new Scanner(mesasIn);
+            int quantidadeMesas = inputQuantMesas.nextInt();
+
+            for (int i = 0; i < quantidadeMesas; i++) {
+
+                File fileIn = new File("mesa " + i);
+                Scanner input;
+
+                input = new Scanner(fileIn);
+                ArrayList<Itens> pedidos = new ArrayList<>();
+
+                while (input.hasNext()) {
+
+                    index = input.nextInt();
+                    quantidade = input.nextInt();
+                    hora = input.next();
+                    Itens item = novoItem(index, quantidade + "");
+                    pedidos.add(item);
+
+                    Mesas novaMesa = new Mesas();
+                    novaMesa.setPedido(pedidos);
+                    novaMesa.setStatus(true);
+                    novaMesa.setHoraAbertura2(hora);
+                    novaMesa.setNome("mesa " + i);
+
+                    barMukifo.add(novaMesa);
+
+                }
+                    input.close();
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(JanelaMain.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        mesasPraCombo = new String[barMukifo.size()];
+        for (int i = 0; i < barMukifo.size(); i++) {
+            mesasPraCombo[i] = barMukifo.get(i).getNome();
+        }
+        cbMesa = new JComboBox<>(mesasPraCombo);
+        atualizaModelo();
+        atualizarStatus();
+        
+    }
+
+   /* private void gravarDadosTxt(ArrayList<Itens> pedidos ) {
+       String[] mesasPraCombo;
+       
+        File file = new File("mesa 0.txt");
+        file.delete();
+        
+        FileWriter arquivos = new FileWriter("mesa 0.txt");
+        PrintWriter gravarArquivos = new PrintWriter(arquivos);
+      
+       
+      
+    }
+    */
 }

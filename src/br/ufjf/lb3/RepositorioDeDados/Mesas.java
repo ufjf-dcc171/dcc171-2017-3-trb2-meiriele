@@ -32,7 +32,9 @@ public class Mesas {
     public String getHoraAbertura() {
         return horaAbertura;
     }
-
+    public void setHoraAbertura2(String hora) {
+        this.horaAbertura = hora;
+    }    
     public void setHoraAbertura() {
         this.horaAbertura = new String();
         this.horaAbertura = (new Date().toString().substring(11, 20));  // tratar abertura da hora(pegar so o meio da string)
