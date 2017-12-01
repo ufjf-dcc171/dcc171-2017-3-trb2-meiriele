@@ -208,7 +208,7 @@ public class JanelaMain extends JFrame {
 
                     }
                     txtQtd.setText("");
-                    
+
                     gravarDadosTxt(cbMesa.getSelectedIndex());
                 }
 
@@ -271,7 +271,7 @@ public class JanelaMain extends JFrame {
                         btnRemover.setEnabled(false);
 
                     }
-                     gravarDadosTxt(cbMesa.getSelectedIndex());
+                    gravarDadosTxt(cbMesa.getSelectedIndex());
                 }
 
             });
@@ -384,7 +384,7 @@ public class JanelaMain extends JFrame {
             int index;
             Integer quantidade;
             String hora, horaFechamento;
-            
+
             File mesasIn = new File("mesas");
             Scanner inputQuantMesas = new Scanner(mesasIn);
             int quantidadeMesas = inputQuantMesas.nextInt();
@@ -393,7 +393,7 @@ public class JanelaMain extends JFrame {
 
                 File fileIn = new File("mesa " + i);
                 File fileInHora = new File("mesaHora " + i);
-                Scanner input,inputHora;
+                Scanner input, inputHora;
 
                 input = new Scanner(fileIn);
                 inputHora = new Scanner(fileInHora);
@@ -407,18 +407,18 @@ public class JanelaMain extends JFrame {
                     Itens item = novoItem(index, quantidade + "");
                     pedidos.add(item);
                     novaMesa.setPedido(pedidos);
-                    
+
                 }
                 novaMesa.setNome("mesa " + i);
                 hora = inputHora.next();
                 boolean status = inputHora.nextBoolean();
-                if(!status){
-                    horaFechamento = inputHora.next(); 
-                     novaMesa.setHoraFechamento2(horaFechamento);
+                if (!status) {
+                    horaFechamento = inputHora.next();
+                    novaMesa.setHoraFechamento2(horaFechamento);
                 }
                 novaMesa.setStatus(status);
                 novaMesa.setHoraAbertura2(hora);
-                
+
                 barMukifo.add(novaMesa);
 
                 input.close();
@@ -440,22 +440,20 @@ public class JanelaMain extends JFrame {
             arq = new FileWriter("mesa " + numeroMesa);
             Formatter gravarArq = new Formatter(arq);
             Formatter gravarArqHora = new Formatter("mesaHora " + numeroMesa);
-            
+
             for (int i = 0; i < barMukifo.get(numeroMesa).getPedido().size(); i++) {
                 int index = pegarIndex(barMukifo.get(numeroMesa).getPedido().get(i).getNome());
                 gravarArq.format("%s", index + " ");
                 gravarArq.format("%s", barMukifo.get(numeroMesa).getPedido().get(i).getQuantidade() + "\n");
             }
-            
+
             gravarArqHora.format("%s", barMukifo.get(numeroMesa).getHoraAbertura() + " ");
-            gravarArqHora.format("%s", barMukifo.get(numeroMesa).getStatus()+" ");
-            gravarArqHora.format("%s", barMukifo.get(numeroMesa).getHoraFechamento()+ " ");
-            
+            gravarArqHora.format("%s", barMukifo.get(numeroMesa).getStatus() + " ");
+            gravarArqHora.format("%s", barMukifo.get(numeroMesa).getHoraFechamento() + " ");
+
             gravarArq.close();
-           gravarArqHora.close();
-           
-           
-            
+            gravarArqHora.close();
+
         } catch (IOException ex) {
             Logger.getLogger(JanelaMain.class.getName()).log(Level.SEVERE, null, ex);
         }
