@@ -83,7 +83,7 @@ public class JanelaMain extends JFrame {
         //ação pra listar itens
         addItens();
         leDadosTxt();
-        
+
         setLayout(new FlowLayout());
 
         JPanel pnlMesas = new JPanel(new BorderLayout(1, 1));
@@ -205,9 +205,11 @@ public class JanelaMain extends JFrame {
                         barMukifo.get(i).getPedido().add(itenPedido);
                         atualizaModelo();
                         atualizarStatus();
+
                     }
                     txtQtd.setText("");
-
+                    
+                    gravarDadosTxt(cbMesa.getSelectedIndex());
                 }
 
             });
@@ -269,7 +271,7 @@ public class JanelaMain extends JFrame {
                         btnRemover.setEnabled(false);
 
                     }
-
+                     gravarDadosTxt(cbMesa.getSelectedIndex());
                 }
 
             });
@@ -381,7 +383,8 @@ public class JanelaMain extends JFrame {
         try {
             int index;
             Integer quantidade;
-            String hora;
+            String hora, horaFechamento;
+            
             File mesasIn = new File("mesas");
             Scanner inputQuantMesas = new Scanner(mesasIn);
             int quantidadeMesas = inputQuantMesas.nextInt();
@@ -389,29 +392,36 @@ public class JanelaMain extends JFrame {
             for (int i = 0; i < quantidadeMesas; i++) {
 
                 File fileIn = new File("mesa " + i);
-                Scanner input;
+                File fileInHora = new File("mesaHora " + i);
+                Scanner input,inputHora;
 
                 input = new Scanner(fileIn);
+                inputHora = new Scanner(fileInHora);
                 ArrayList<Itens> pedidos = new ArrayList<>();
 
+                Mesas novaMesa = new Mesas();
                 while (input.hasNext()) {
 
                     index = input.nextInt();
                     quantidade = input.nextInt();
-                    hora = input.next();
                     Itens item = novoItem(index, quantidade + "");
                     pedidos.add(item);
-
-                    Mesas novaMesa = new Mesas();
                     novaMesa.setPedido(pedidos);
-                    novaMesa.setStatus(true);
-                    novaMesa.setHoraAbertura2(hora);
-                    novaMesa.setNome("mesa " + i);
-
-                    barMukifo.add(novaMesa);
-
+                    
                 }
-                    input.close();
+                novaMesa.setNome("mesa " + i);
+                hora = inputHora.next();
+                boolean status = inputHora.nextBoolean();
+                if(!status){
+                    horaFechamento = inputHora.next(); 
+                     novaMesa.setHoraFechamento2(horaFechamento);
+                }
+                novaMesa.setStatus(status);
+                novaMesa.setHoraAbertura2(hora);
+                
+                barMukifo.add(novaMesa);
+
+                input.close();
             }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(JanelaMain.class.getName()).log(Level.SEVERE, null, ex);
@@ -422,21 +432,50 @@ public class JanelaMain extends JFrame {
             mesasPraCombo[i] = barMukifo.get(i).getNome();
         }
         cbMesa = new JComboBox<>(mesasPraCombo);
-        atualizaModelo();
-        atualizarStatus();
-        
     }
 
-    private void gravarDadosTxt(ArrayList<Itens> pedidos ) throws FileNotFoundException  {
-       PrintWriter arq = new PrintWriter("Itens.txt");
-       PrintWriter gravarArq = new PrintWriter(arq);
-        for (int i = 0; i < barMukifo.size(); i++) {
-            gravarArq.println();
-           barMukifo.get(i).getPedido();
-           atualizaModelo();
-           atualizarStatus();
+    private void gravarDadosTxt(int numeroMesa) {
+        FileWriter arq = null;
+        try {
+            arq = new FileWriter("mesa " + numeroMesa);
+            Formatter gravarArq = new Formatter(arq);
+            Formatter gravarArqHora = new Formatter("mesaHora " + numeroMesa);
+            
+            for (int i = 0; i < barMukifo.get(numeroMesa).getPedido().size(); i++) {
+                int index = pegarIndex(barMukifo.get(numeroMesa).getPedido().get(i).getNome());
+                gravarArq.format("%s", index + " ");
+                gravarArq.format("%s", barMukifo.get(numeroMesa).getPedido().get(i).getQuantidade() + "\n");
+            }
+            
+            gravarArqHora.format("%s", barMukifo.get(numeroMesa).getHoraAbertura() + " ");
+            gravarArqHora.format("%s", barMukifo.get(numeroMesa).getStatus()+" ");
+            gravarArqHora.format("%s", barMukifo.get(numeroMesa).getHoraFechamento()+ " ");
+            
+            gravarArq.close();
+           gravarArqHora.close();
+           
+           
+            
+        } catch (IOException ex) {
+            Logger.getLogger(JanelaMain.class.getName()).log(Level.SEVERE, null, ex);
         }
-       arq.close();
+
     }
-    
+
+    private int pegarIndex(String nomeItem) {
+        if (nomeItem == "Coca-cola") {
+            return 0;
+        } else if (nomeItem == "cerveja") {
+            return 1;
+
+        } else if (nomeItem == "Coxinha") {
+            return 2;
+        } else if (nomeItem == "pinga") {
+            return 3;
+        } else if (nomeItem == "Sorvete") {
+            return 4;
+        } else {
+            return 5;
+        }
+    }
 }
