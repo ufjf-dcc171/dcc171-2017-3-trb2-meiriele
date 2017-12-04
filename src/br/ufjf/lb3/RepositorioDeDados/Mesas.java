@@ -1,17 +1,17 @@
-
 package br.ufjf.lb3.RepositorioDeDados;
 
 import java.sql.Time;
 import java.util.ArrayList;
 import java.util.Date;
 
-
 public class Mesas {
+
     private ArrayList<Itens> pedido = new ArrayList<>();
     private String horaAbertura;
     private String horaFechamento;
     private Boolean status;
     private String nome;
+
     //private Time teste;
     public Mesas() {
         this.horaAbertura = null;
@@ -20,7 +20,7 @@ public class Mesas {
         this.nome = null;
         pedido = new ArrayList<>();
     }
-    
+
     public ArrayList<Itens> getPedido() {
         return pedido;
     }
@@ -32,9 +32,11 @@ public class Mesas {
     public String getHoraAbertura() {
         return horaAbertura;
     }
+
     public void setHoraAbertura2(String hora) {
         this.horaAbertura = hora;
-    }    
+    }
+
     public void setHoraAbertura() {
         this.horaAbertura = new String();
         this.horaAbertura = (new Date().toString().substring(11, 20));  // tratar abertura da hora(pegar so o meio da string)
@@ -47,6 +49,11 @@ public class Mesas {
     public void setHoraFechamento() {
         this.horaFechamento = new String();
         this.horaFechamento = (new Date().toString().substring(11, 20));
+    }
+
+    public void setHoraFechamento2(String hora) {
+        this.horaFechamento = hora;
+
     }
 
     public Boolean getStatus() {
@@ -64,12 +71,10 @@ public class Mesas {
     public void setNome(String nome) {
         this.nome = nome;
     }
-    
-    
-    public void reajustaHora(String hora){
+
+    public void reajustaHora(String hora) {
         this.horaAbertura = hora;
         this.horaFechamento = hora;
     }
-   
-    
+
 }

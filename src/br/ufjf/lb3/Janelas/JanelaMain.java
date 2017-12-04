@@ -414,7 +414,7 @@ public class JanelaMain extends JFrame {
                 boolean status = inputHora.nextBoolean();
                 if (!status) {
                     horaFechamento = inputHora.next();
-                    novaMesa.setHoraFechamento2(horaFechamento);
+                    novaMesa.setHoraFechamento2(hora);
                 }
                 novaMesa.setStatus(status);
                 novaMesa.setHoraAbertura2(hora);
